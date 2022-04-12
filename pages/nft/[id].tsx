@@ -28,7 +28,7 @@ const NftDropContentPage = () => {
 
     //Чекаем, зашли мы или нет
     console.log(address)
-
+    // console.log("check token", process.env.REACT_APP_SANITY_PROJECT_ID)
      return (
         <>
             <div className='flex flex-col h-screen lg:grid lg:grid-cols-10'>
@@ -41,12 +41,11 @@ const NftDropContentPage = () => {
                 '>
                         <div className='rounded-xl bg-gradient-to-br from-yellow-400 to-purple-600 p-2'>
                             <img className='w-44 rounded-xl object-cover lg:h-96 lg:w-72'
-                                 src="https://links.papareact.com/8sg" alt="monkey"/>
+                                 src="https://cdn.pixabay.com/photo/2018/01/18/07/31/bitcoin-3089728_960_720.jpg" alt="monkey"/>
                         </div>
                         <div className='space-y-2 text-center p-5'>
-                            <h1 className='text-3xl font-bold text-white'>Коллекция картинок (тестовая)</h1>
-                            <h2 className='text-xl text-gray-300'>Lorem ipsum dolor sit amet, consectetur adipiscing
-                                elit.
+                            <h1 className='text-3xl font-bold text-white'>Продажа криптовалюты</h1>
+                            <h2 className='text-xl text-gray-300'>Сapuchin —самая удобная площадка для купли и продажи криптовалюты
                             </h2>
                         </div>
                     </div>
@@ -65,7 +64,7 @@ const NftDropContentPage = () => {
                         <h1 className='w-52 cursor-pointer font-bold text-xl sm:w-80 text-white'>
                             Магазин картинок{' '}
                             <span className='font-extrabold  text-gray-700
-                            '> Капуцин</span>
+                            '> Сapuchin</span>
                         </h1>
                         <button onClick={ address ? disconnectMetaMask : connectMetaMask} className='rounded-full bg-orange-600 text-white px-4
                 py-2 text-xs font-bold lg:px-5 lg:py-3 Lg:text-base'>
@@ -82,10 +81,10 @@ const NftDropContentPage = () => {
                     text-center lg:space-y-0 lg: justify-center
                     '>
                         <img className='w-[336px] object-cover pb-10 lg: h-[328px] rounded-lg'
-                             src="https://links.papareact.com/bdy" alt="monkey"/>
+                             src="https://cdn.pixabay.com/photo/2016/11/10/05/09/bitcoin-1813503_960_720.jpg" alt="monkey"/>
                         <h1 className='font-bold text-3xl text-white'>
-                            NFT продажа картинок || Магазин <span className='font-bold text-gray-800'>
-                            Капуцин</span></h1>
+                            Продажа крипты || Магазин <span className='font-bold text-gray-800'>
+                            Сapuchin</span></h1>
 
                         <p className='pt-2 text-xl text-pink-700/80'>Выполнено 13/27 NFT картинок</p>
                     </div>
