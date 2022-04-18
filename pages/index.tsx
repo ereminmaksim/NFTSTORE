@@ -32,7 +32,7 @@ const Home = ({collections, collectionsTwo}: CollectionType) => {
             {/*    collectionsTwo={collectionsTwo}/>*/}
             <main className="bg-state-100 p-10 shadow-2xl shadow-gray-400/50">
                 <div className='grid mx-20 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-2'>
-                    <div>
+
                         {collections.map(collection => (
                             <div key={collection._id}>
                                 <Link href={`nft/${collection.slug.current}`}>
@@ -49,23 +49,6 @@ const Home = ({collections, collectionsTwo}: CollectionType) => {
                                 </Link>
                             </div>
                         ))}
-                    </div>
-                    {collectionsTwo.map(collection => (
-                        <div key={collection._id}>
-                            <Link href={`nft/${collection.slug.current}`}>
-                                <div className='flex flex-col items-center transition-all duration-200
-                        hover:scale-105 cursor-pointer'>
-
-                                    <img className='h-96 w-60 rounded-2xl object-cover'
-                                         src={urlFor(collection.mainImage).url()} alt="image"/>
-                                    <div className='p-5'>
-                                        <h2 className='text-3xl'>{collection.title}</h2>
-                                        <p className='mt-2 text-sm text-gray-400'>{collection.description}</p>
-                                    </div>
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
                 </div>
             </main>
         </div>

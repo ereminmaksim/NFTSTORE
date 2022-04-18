@@ -1,9 +1,11 @@
-import React from 'react';
-import {useAddress, useDisconnect, useMetamask} from "@thirdweb-dev/react";
+import React, {useEffect, useState} from 'react';
+import {useAddress, useDisconnect, useMetamask, useNFTDrop} from "@thirdweb-dev/react";
 import {GetServerSideProps} from "next";
 import {sanityClient, urlFor} from "../../sanity";
 import {Collection} from "../../typing";
 import Link from "next/link";
+import {BigNumber} from "ethers";
+import toast, {Toaster} from "react-hot-toast";
 
 
 interface Props {
@@ -11,6 +13,14 @@ interface Props {
 }
 
 const NftDropContentPage = ({collections}: Props) => {
+    /**
+     * состояние для отлова кол-ва etherium
+     */
+    const [claimedSupply, setClaimedSupply] = useState<number>(0)
+    const [totalCloud, setTotalCloud] = useState<BigNumber>()
+    const [priceEth, setPriceEth] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(true)
+    const nftDrop = useNFTDrop(collections.address)
 
 //*********************************************************************
     /**
@@ -31,14 +41,109 @@ const NftDropContentPage = ({collections}: Props) => {
     const disconnectMetaMask = () => {
         return disconnect()
     }
+//*********************************************************************
+    /**
+     * рекативное отображение элементов etherium - (точное значение)
+     */
+
+    useEffect(() => {
+        if (!nftDrop) return
+
+        const fetchPrice = async () => {
+            const claimCondition = await nftDrop.claimConditions.getAll()
+            setPriceEth(claimCondition?.[0].currencyMetadata.displayValue)
+        }
+        fetchPrice()
+    }, [nftDrop]);
+
+//*********************************************************************
+
+
+    useEffect(() => {
+        if (!nftDrop) return
+
+        const fetchNFTDropp = async () => {
+            setLoading(true)
+            const claimed = await nftDrop.getAllClaimed()
+            const total = await nftDrop.totalSupply()
+
+
+            setClaimedSupply(claimed.length)
+            setTotalCloud(total)
+            setLoading(false)
+        }
+
+        fetchNFTDropp()
+    }, [nftDrop])
+
 
     //Чекаем, зашли мы или нет
-    console.log(address)
+    // console.log(address)
+    // console.log(nftDrop)
     // console.log("check token", process.env.REACT_APP_SANITY_PROJECT_ID)
+
+    const coinageNft = () => {
+        if (!nftDrop || !address) return
+        const quantity = 1
+        setLoading(true)
+        const notification = toast.loading("Чеканка монет..", {
+            style: {
+                background: "white",
+                color: "green",
+                fontWeight: "bolder",
+                fontSize: "17px",
+                padding: "20px"
+            }
+        })
+
+
+        nftDrop.claimTo(address, quantity).then(async (eth) => {
+            const receipt = eth[0].receipt;
+            const claimedTokenId = eth[0].id;
+            const claimedNFT = eth[0].data();
+
+            toast("Уаууу, успешная чеканка:)!!!", {
+                duration: 8000,
+                style: {
+                    background: "green",
+                    color: "white",
+                    fontWeight: "bolder",
+                    fontSize: "17px",
+                    padding: "20px"
+                }
+            })
+
+            console.log(receipt)
+            console.log(claimedTokenId)
+            console.log(claimedTokenId)
+            console.log(claimedNFT)
+
+        }).catch(error => {
+            toast("К сожелению, не получилось:(", {
+
+                style: {
+                    background: "red",
+                    color: "white",
+                    fontWeight: "bolder",
+                    fontSize: "17px",
+                    padding: "20px"
+                }
+            })
+            console.log(error)
+        }).finally(() => {
+            setLoading(false)
+            toast.dismiss(notification)
+        })
+    }
+
+
     return (
         <>
             <div className='flex flex-col h-screen lg:grid lg:grid-cols-10'>
                 {/*Content-Left*/}
+                <Toaster position='bottom-center'
+
+                />
                 <div className='bg-gradient-to-br from-cyan-800 to-rose-500
             lg:col-span-4 border-r-[4px] border-amber-400
             '>
@@ -96,12 +201,34 @@ const NftDropContentPage = ({collections}: Props) => {
                             {collections.nftCollectionName} <span className='font-bold text-gray-800'>
                             Сapuchin</span></h1>
 
-                        <p className='pt-2 text-xl text-pink-700/80'>Выполнено 13/27 NFT картинок</p>
+                        {loading ? (
+                                <span className='pt-2 text-xl text-pink-700/80'>Загрузка NFT картинок, подождите...</span>
+                            ) :
+                            <p className='pt-2 text-xl text-pink-700/80'>Выполнено {claimedSupply}/{totalCloud?.toString()} NFT
+                                картинок</p>
+                        }
+                        {loading && (
+                            <img className="h-80 w-80 object-contain"
+                                // src='https://cdn.hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif' alt='loading'/>
+                                 src='https://acegif.com/wp-content/uploads/loading-1.gif' alt='loading'/>
+                        )}
                     </div>
 
                     {/*Button*/}
-                    <button className='rounded-full bg-orange-600 text-white px-4
-                py-2 text-xl font-bold lg:px-5 lg:py-3 Lg:text-base'>Счёт NFT(0.01 ETH)
+                    <button onClick={coinageNft}
+                            disabled={loading || claimedSupply === totalCloud?.toNumber() || !address}
+                            className='rounded-full bg-orange-600 text-white px-4
+                py-2 text-xl font-bold lg:px-5 lg:py-3 Lg:text-base disabled:bg-neutral-600'>
+                        {loading ? (
+                            <span>Загрузка ETH, подождите...</span>
+                        ) : claimedSupply === totalCloud?.toNumber() ? (
+                            <span>Всё продано</span>
+                        ) : !address ? (
+                            <span>Войдите в систему</span>
+                        ) : (
+                            <span className="font-bold">Счёт NFT({priceEth} ETH)</span>
+                        )}
+
                     </button>
                 </div>
             </div>

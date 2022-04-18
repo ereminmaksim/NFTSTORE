@@ -7,10 +7,9 @@ import schemaTypes from 'all:part:@sanity/base/schema-type'
 // We import object and document schemas
 import collection from './collection'
 import creator from './creator'
-import collectionTwo from './collectionTwo'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
     name: 'default',
-    types: schemaTypes.concat([collection, collectionTwo, creator]),
+    types: schemaTypes.concat([collection, creator]),
 })
