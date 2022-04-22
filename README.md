@@ -7,5 +7,5 @@ Metamask Thirdweb, Next.js, Typescript, Tailwind
 Зайти можно с помощью Metamask и попробовать зачеканить несколько картинок и в дальнейшем собрать коллекцию на OpenSea, 
 создано с помощью тестового аккаунта в Rinkeby, CMS(Sanity), Front(Next.js)
 
-![Header](https://i.gifer.com/h4m.gif)
+![Header](https://i.gifer.com/h4m.mp4)
 
